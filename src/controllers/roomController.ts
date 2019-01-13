@@ -164,13 +164,16 @@ router.put(
 router.put(
   "/:roomUrl",
   checkAuth,
-  checkInRoom,
   async (req: express.Request, res: express.Response) => {
     try {
       const user: User = res.locals.user;
-      const room: Room = res.locals.room;
+      const { roomUrl } = req.params;
+      const room = await RoomModel.findOne({ url: roomUrl });
       const { title, lecturer, password } = req.body;
 
+      if (!room) {
+        throw ERROR.NO_ROOM;
+      }
       if (!ownRoom(room, user)) {
         throw ERROR.NO_PERMISSION;
       }

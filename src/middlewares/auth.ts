@@ -57,8 +57,8 @@ export const checkInRoom = async (
     }
 
     const inRoom =
-      findIndex(room.admins, admin => {
-        return admin._id.equals(user._id);
+      findIndex(room.participants, participants => {
+        return participants._id.equals(user._id);
       }) !== -1;
 
     if (!inRoom) {
@@ -66,6 +66,7 @@ export const checkInRoom = async (
     }
 
     res.locals.room = room;
+
     return next();
   } catch (err) {
     return res

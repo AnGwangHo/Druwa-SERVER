@@ -4,12 +4,14 @@ import multer from "multer";
 
 const router = express.Router();
 const url = "uploads/";
+let file_name = "";
 const storage = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, url);
   },
   filename(req, file, cb) {
-    cb(null, Date.now() + "_" + file.originalname);
+    file_name = Date.now() + "_" + file.originalname;
+    cb(null, file_name);
   },
 });
 const upload = multer({
@@ -23,8 +25,7 @@ router.post(
   upload.single("uploadfile"),
   async (req: express.Request, res: express.Response) => {
     try {
-      const result =
-        "http://" + req.headers.host + "/uploads/" + req.file.originalname;
+      const result = "http://" + req.headers.host + "/uploads/" + file_name;
       res.status(200).send(result);
     } catch (err) {
       return res.status(404).send(err);
